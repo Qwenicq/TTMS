@@ -26,18 +26,21 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'; 
-import {userLoginAPI} from '@/apis/user/index'
+import { userLoginAPI } from '@/apis/user/index'
+import {message}  from 'ant-design-vue';
 
 const formData = ref({
     phone: '',
     password: ''
 })
 
-const handleClick = async () => {
-    console.log(formData.value);
-    
+const handleClick = async () => {    
     const res = await userLoginAPI(formData.value)
-    console.log(res);   
+    if (res.data.message !== '登录成功') {
+            message.warning(res.data.message)
+            return
+        }
+        message.success(res.data.message)
 }
 </script>
 

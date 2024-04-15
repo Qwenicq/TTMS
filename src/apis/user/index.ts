@@ -2,15 +2,16 @@
 import request from "@/utils/request"
 
 enum API {
-    USERLOGINAPI='/user/api/loginByPassword'
+    USERLOGINAPI = '/user/api/loginByPassword',
+    USERREGISTERAPI = '/user/api/createUser'
 }
 
 // 用户登录
 export const userLoginAPI = (data: any) => {
-    console.log(data);
-    
-    const formData = new FormData();
-    formData.append('phone', data.phone);
-    formData.append('password', data.password);
     return request.post(API.USERLOGINAPI, data)
+}
+
+// 用户注册
+export const userRegisterAPI = (data: any) =>{
+    return request.post(API.USERREGISTERAPI,data)
 }

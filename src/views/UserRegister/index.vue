@@ -2,27 +2,27 @@
     <div class="register_container">
         <div class="container">
             <div class="form_area">
-                <p class="title">SIGN UP</p>
-                <form action="">
+                <p class="title">注册</p>
+                <form @submit.prevent="handleClcik">
                     <div class="form_group">
-                        <label class="sub_title" for="name">Name</label>
-                        <input placeholder="Enter your full name" class="form_style" type="text">
+                        <label class="sub_title" for="phone">电话</label>
+                        <input class="form_style" type="text" pattern="1{1}[3-9]{1}[0-9]{9}" v-model="formData.phone">
                     </div>
                     <div class="form_group">
-                        <label class="sub_title" for="password">Password</label>
-                        <input placeholder="Enter your password" id="password" class="form_style" type="password">
+                        <label class="sub_title" for="password">密码</label>
+                        <input id="password" class="form_style" type="password" v-model="formData.password">
                     </div>
                     <div class="form_group">
-                        <label class="sub_title" for="password">Repassword</label>
-                        <input placeholder="Enter your repassword" id="repassword" class="form_style" type="password">
+                        <label class="sub_title" for="password">确认密码</label>
+                        <input id="repassword" class="form_style" type="password" v-model="formData.repassword">
                     </div>
                     <div>
-                        <button class="btn">SIGN UP</button>
-                        <p>Have an Account? <a class="link" href="">Login Here!</a></p><a class="link" href="">
-                        </a>
-                    </div><a class="link" href="">
+                        <button class="btn">注册</button>
+                        <p>已有帐号？ <a class="link" href="/login">去登陆!</a></p><span class="link">
+                        </span>
+                    </div><span class="link">
 
-                    </a>
+                    </span>
                 </form>
             </div><a class="link" href="">
             </a>
@@ -31,7 +31,28 @@
 </template>
 
 <script setup lang="ts">
+import { userRegisterAPI } from '@/apis/user';
+import { ref } from 'vue';
+import {message}  from 'ant-design-vue';
 
+
+const formData = ref({
+    phone: '',
+    password: '',
+    repassword:''
+})
+
+const handleClcik =  () => {
+    async function  userRegister () {
+        const res = await userRegisterAPI(formData.value)
+        if (res.data.message !== '注册成功') {
+            message.warning(res.data.message)
+            return
+        }
+        message.success(res.data.message)
+    }
+    userRegister()
+}
 </script>
 
 <style scoped>
@@ -42,6 +63,7 @@
     align-items: center;
     justify-content: center;
     font-family: "也字工厂";
+
     .container {
         display: flex;
         align-items: center;
