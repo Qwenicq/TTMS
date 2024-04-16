@@ -44,7 +44,7 @@ const handleClick = async () => {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .login_container {
     height: 100vh;
     background: url('@/assets/images/loginBG.jpg');

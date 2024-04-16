@@ -7,6 +7,11 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    ACard: typeof import('ant-design-vue/es')['Card']
+    ACardMeta: typeof import('ant-design-vue/es')['CardMeta']
+    ACol: typeof import('ant-design-vue/es')['Col']
+    AMenu: typeof import('ant-design-vue/es')['Menu']
+    ARow: typeof import('ant-design-vue/es')['Row']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     TTMSTop: typeof import('./src/components/TTMSTop.vue')['default']

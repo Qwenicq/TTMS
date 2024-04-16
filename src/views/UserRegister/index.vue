@@ -55,7 +55,7 @@ const handleClcik =  () => {
 }
 </script>
 
-<style scoped>
+<style scoped  lang="scss">
 .register_container {
     height: 100vh;
     background: url('@/assets/images/loginBG.jpg');
