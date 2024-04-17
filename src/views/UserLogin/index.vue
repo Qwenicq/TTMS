@@ -38,6 +38,9 @@ import { ref } from 'vue';
 import { userLoginAPI, getCode as _getCode, userLoginByCode } from '@/apis/user/index'
 import { message } from 'ant-design-vue';
 import type { UserData, LoginParams, Code } from '@/apis/user/type'
+import router from '@/router';
+import {setToken} from '@/utils/Token'
+
 
 const formData = ref<LoginParams>({
     phone: '',
@@ -70,7 +73,10 @@ const handleClick = async () => {
         return
     }
     if (res) {
+        const headers = res.headers
+        setToken(headers)
         message.success(res.data.message);
+        router.push('/')
     }
 }
 </script>

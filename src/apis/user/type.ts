@@ -25,6 +25,9 @@ export interface Code {
 
 // 登录数据参数
 export interface UserData {
+headers: any;
+[x: string]: any;
+    
     "data": {
         "code": number,
     "data": {

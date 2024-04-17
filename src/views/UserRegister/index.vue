@@ -35,6 +35,7 @@ import { userRegisterAPI } from '@/apis/user';
 import { ref } from 'vue';
 import { message } from 'ant-design-vue';
 import type {RegisterParams, UserData } from '@/apis/user/type'
+import router from '@/router';
 
 
 const formData = ref<RegisterParams>({
@@ -51,6 +52,7 @@ const handleClcik =  () => {
             return
         }
         message.success(res.data.message)
+        router.push('/login')
     }
     userRegister()
 }

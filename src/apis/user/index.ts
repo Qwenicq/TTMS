@@ -1,6 +1,7 @@
 // 用于记录用户操作
 import request from "@/utils/request"
 import type {LoginParams, UserData,RegisterParams,Code} from './type'
+import { setToken } from "@/utils/Token"
 
 enum API {
     USERLOGINAPI = '/user/api/loginByPassword',
@@ -12,6 +13,7 @@ enum API {
 // 用户登录
 export const userLoginAPI = (userData: LoginParams) => {
     return request.post<any, UserData>(API.USERLOGINAPI, userData)
+    
 }
 
 // 用户注册
