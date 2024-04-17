@@ -3,18 +3,27 @@
         <div class="container">
             <div class="form_area">
                 <p class="title">登录</p>
-                <form  @submit.prevent="handleClick">
+                <form @submit.prevent="handleClick">
                     <div class="form_group">
-                        <label class="sub_title" for="phone" >电话</label>
-                        <input  class="form_style" type="text" v-model="formData.phone"  pattern="1{1}[3-9]{1}[0-9]{9}">
+                        <label class="sub_title" for="phone">电话</label>
+                        <input class="form_style" type="text" v-model="formData.phone" pattern="1{1}[3-9]{1}[0-9]{9}">
                     </div>
-                    <div class="form_group">
+                    <div class="form_group" v-if="flag">
                         <label class="sub_title" for="password">密码</label>
-                        <input  id="password" class="form_style" type="password" v-model="formData.password">
+                        <input id="password" class="form_style" type="password" v-model="formData.password">
+                        <a class="link" @click="handleCode">使用验证码登录</a>
                     </div>
-                   
+                    <div class="form_group code_group" v-else>
+                        <label class="sub_title" for="password">验证码</label>
+                        <div><input id="password" class="form_style code_form" type="password"
+                                v-model="formData.code">
+                            <button class="btn code_btn" type="button" @click="getCode">获取验证码</button>
+                        </div>
+                        <a class="link" @click="handleCode">使用密码登录</a>
+                    </div>
+
                     <div>
-                        <button class="btn" >登录</button>
+                        <button class="btn">登录</button>
                         <p>没有账号? <a class="link" href="/register">立即注册!</a></p>
                         <span class="link"></span>
                     </div>
@@ -25,22 +34,44 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'; 
-import { userLoginAPI } from '@/apis/user/index'
-import {message}  from 'ant-design-vue';
+import { ref } from 'vue';
+import { userLoginAPI, getCode as _getCode, userLoginByCode } from '@/apis/user/index'
+import { message } from 'ant-design-vue';
+import type { UserData, LoginParams, Code } from '@/apis/user/type'
 
-const formData = ref({
+const formData = ref<LoginParams>({
     phone: '',
-    password: ''
+    password: '',
+    code: ''
 })
 
-const handleClick = async () => {    
-    const res = await userLoginAPI(formData.value)
-    if (res.data.message !== '登录成功') {
-            message.warning(res.data.message)
-            return
-        }
-        message.success(res.data.message)
+let flag = ref<boolean>(true)
+
+// 处理验证码登录切换
+const handleCode = () => {
+    flag.value = !flag.value
+}
+
+// 获取验证码
+const getCode = async () => {
+    const res =<Code> await _getCode(formData.value.phone)
+    message.success('验证码：' + res.data.message)
+}
+
+const handleClick = async () => {
+    let res = null
+    if (flag.value) {
+        res = <UserData>await userLoginAPI(formData.value)
+    } else {
+        res = <UserData>await userLoginByCode(formData.value)
+    }
+    if (res && res.data.message !== '欢迎回来') {
+        message.warning(res.data.message)
+        return
+    }
+    if (res) {
+        message.success(res.data.message);
+    }
 }
 </script>
 
@@ -52,6 +83,7 @@ const handleClick = async () => {
     align-items: center;
     justify-content: center;
     font-family: "也字工厂";
+
     .container {
         display: flex;
         align-items: center;
@@ -102,6 +134,19 @@ const handleClick = async () => {
         font-size: 15px;
     }
 
+    .code_form {
+        width: 180px;
+        display: inline-block;
+
+    }
+
+    .code_btn {
+        display: inline-block;
+        padding: 13px !important;
+        margin: 0 0 0 3px !important;
+        width: 110px !important;
+    }
+
     .form_style:focus,
     .btn:focus {
         transform: translateY(4px);
@@ -124,6 +169,7 @@ const handleClick = async () => {
     }
 
     .link {
+        cursor: pointer;
         font-weight: 800;
         color: #264143;
         padding: 5px;
