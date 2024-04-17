@@ -33,10 +33,11 @@
 <script setup lang="ts">
 import { userRegisterAPI } from '@/apis/user';
 import { ref } from 'vue';
-import {message}  from 'ant-design-vue';
+import { message } from 'ant-design-vue';
+import type {RegisterParams, UserData } from '@/apis/user/type'
 
 
-const formData = ref({
+const formData = ref<RegisterParams>({
     phone: '',
     password: '',
     repassword:''
@@ -44,7 +45,7 @@ const formData = ref({
 
 const handleClcik =  () => {
     async function  userRegister () {
-        const res = await userRegisterAPI(formData.value)
+        const res =<UserData> await userRegisterAPI(formData.value)
         if (res.data.message !== '注册成功') {
             message.warning(res.data.message)
             return
