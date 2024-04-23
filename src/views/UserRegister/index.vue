@@ -31,34 +31,39 @@
 </template>
 
 <script setup lang="ts">
-import { userRegisterAPI } from '@/apis/user';
+import { userRegisterAPI, userLoginAPI } from '@/apis/user';
 import { ref } from 'vue';
 import { message } from 'ant-design-vue';
-import type {RegisterParams, UserData } from '@/apis/user/type'
+import type { RegisterParams, UserData } from '@/apis/user/type'
+import { setToken } from '@/utils/Token'
 import router from '@/router';
 
 
 const formData = ref<RegisterParams>({
     phone: '',
     password: '',
-    repassword:''
+    repassword: ''
 })
 
-const handleClcik =  () => {
-    async function  userRegister () {
-        const res =<UserData> await userRegisterAPI(formData.value)
+const handleClcik = () => {
+    async function userRegister() {
+        const res = <UserData>await userRegisterAPI(formData.value)
         if (res.data.message !== '注册成功') {
             message.warning(res.data.message)
             return
         }
         message.success(res.data.message)
-        router.push('/login')
+        const { phone, password } = formData.value
+        const resL = await userLoginAPI({ phone, password, code: '' })
+        const headers = resL.headers
+        setToken(headers)
+        router.push('/')
     }
     userRegister()
 }
 </script>
 
-<style scoped  lang="scss">
+<style scoped lang="scss">
 .register_container {
     height: 100vh;
     background: url('@/assets/images/loginBG.jpg');

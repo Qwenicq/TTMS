@@ -54,3 +54,35 @@ headers: any;
     }
 }
 
+
+// 修改密码
+export interface ChangePWD {
+    phone: string,
+    password:string
+}
+
+
+// 用户信息
+export interface userInfo {
+    "code": string,
+    "message": string,
+    "data": {
+        "ID": number,
+        "CreatedAt": string,
+        "UpdatedAt": string,
+        "DeletedAt": null,
+        "Wallet": 0,
+        "Flag": 0,
+        "Ticket": [],
+        "Snack": [],
+        "FavoriteMovie": [],
+        "FavoriteSnack": [],
+        "Name": string,
+        "ProfilePhoto": string,
+        "Birthday":string,
+        "Interest": string[]
+        "Sign": string
+    },
+    "rows": null,
+    "total": null
+}

@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { getToken, setToken } from './Token';
 
 
 const baseURL = '/api'
@@ -7,13 +8,14 @@ const request = axios.create({
   baseURL,
   timeout: 100000,
   headers: {
-    'Content-Type': 'multipart/form-data'
-  }
+    'Content-Type': 'multipart/form-data',
+    'Authorization': `Bearer ${getToken().token}`
+   }
 })
 
 // 添加请求拦截器
 request.interceptors.request.use(function (config) {
-    // 在发送请求之前做些什么
+  // 在发送请求之前做些什么
     return config;
   }, function (error) {
     // 对请求错误做些什么

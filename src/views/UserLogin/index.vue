@@ -11,12 +11,24 @@
                     <div class="form_group" v-if="flag">
                         <label class="sub_title" for="password">密码</label>
                         <input id="password" class="form_style" type="password" v-model="formData.password">
-                        <a class="link" @click="handleCode">使用验证码登录</a>
+                        <div class="box">
+                            <a class="link" @click="handleCode">使用验证码登录</a>
+                            <a class="link" @click="showModal">忘记密码</a>
+                            <a-modal v-model:open="open" title="修改密码" @ok="handleOk">
+                                <span>电话:
+                                    <a-input v-model:value="changePWD.phone"></a-input>
+                                </span>
+                                <span>
+                                    密码:
+                                    <a-input v-model:value="changePWD.password"></a-input>
+                                </span>
+                            </a-modal>
+
+                        </div>
                     </div>
                     <div class="form_group code_group" v-else>
                         <label class="sub_title" for="password">验证码</label>
-                        <div><input id="password" class="form_style code_form" type="password"
-                                v-model="formData.code">
+                        <div><input id="password" class="form_style code_form" type="password" v-model="formData.code">
                             <button class="btn code_btn" type="button" @click="getCode">获取验证码</button>
                         </div>
                         <a class="link" @click="handleCode">使用密码登录</a>
@@ -35,17 +47,23 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { userLoginAPI, getCode as _getCode, userLoginByCode } from '@/apis/user/index'
+import { userLoginAPI, getCode as _getCode, userLoginByCode, changePWD as _changePWD, getUserInfo } from '@/apis/user/index'
 import { message } from 'ant-design-vue';
 import type { UserData, LoginParams, Code } from '@/apis/user/type'
 import router from '@/router';
-import {setToken} from '@/utils/Token'
+import { setToken } from '@/utils/Token'
+import setUserInfo from '@/stores/modules/user'
 
-
+const open = ref<boolean>(false);
 const formData = ref<LoginParams>({
     phone: '',
     password: '',
     code: ''
+})
+
+const changePWD = ref({
+    phone: '',
+    password: ''
 })
 
 let flag = ref<boolean>(true)
@@ -57,9 +75,22 @@ const handleCode = () => {
 
 // 获取验证码
 const getCode = async () => {
-    const res =<Code> await _getCode(formData.value.phone)
+    const res = <Code>await _getCode(formData.value.phone)
     message.success('验证码：' + res.data.message)
 }
+
+const showModal = () => {
+    open.value = true;
+};
+
+const handleOk = () => {
+    async function change_PWD() {
+        const res = <Code>await _changePWD(changePWD.value)
+        message.success(res.data.message)
+    }
+    change_PWD()
+    open.value = false;
+};
 
 const handleClick = async () => {
     let res = null
@@ -79,6 +110,7 @@ const handleClick = async () => {
         router.push('/')
     }
 }
+
 </script>
 
 <style scoped lang="scss">
@@ -172,6 +204,12 @@ const handleClick = async () => {
 
     .btn:hover {
         opacity: .9;
+    }
+
+    .box {
+        width: 310px;
+        display: flex;
+        justify-content: space-between;
     }
 
     .link {

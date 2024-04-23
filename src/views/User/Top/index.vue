@@ -1,7 +1,7 @@
 <template>
     <div class="top_container">
         <div class="content">
-            <span class="logo">
+            <div><span class="logo">
                 <svg t="1713267693672" class="icon" viewBox="0 0 1024 1024" version="1.1"
                     xmlns="http://www.w3.org/2000/svg" p-id="2487" width="48" height="48">
                     <path
@@ -19,6 +19,8 @@
                 </svg>
                 <p>TTMS</p>
             </span>
+            <a href="/" class="router">首页</a>
+            </div>
             <a-dropdown>
                 <a class="ant-dropdown-link" @click.prevent>
                     <a-avatar size="large">
@@ -99,6 +101,14 @@ const handleUser = () => {
                 font-size: 30px;
                 font-weight: 800;
             }
+        }
+
+        .router{
+            padding-left: 100px;
+            text-decoration: none;
+            color: black;
+            font-family: "也字工厂";
+            font-size: 28px;
         }
 
         .loginReq {

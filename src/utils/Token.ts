@@ -1,7 +1,7 @@
 // 存储关于Token的方法
 // 设置token
 const setToken = (headers: Headers) => {
-  const token = headers.get("Authorization")
+  const token = headers.get("Authorization")?.replace('Bearer ', '')
   const refresh_token = headers.get("Set-Cookie")
   if (token) {
     localStorage.setItem("token", token)
@@ -22,6 +22,7 @@ const getToken = () => {
 const removeToken = () => {
   localStorage.removeItem("token")
   localStorage.removeItem("refresh_token")
+  window.location.reload();
 }
 
 export { setToken, getToken, removeToken }

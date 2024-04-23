@@ -19,6 +19,20 @@ const router = createRouter({
       path: "/manger",
       component: () => import("@/views/SnackManger/index.vue"),
     },
+    {
+      path: "/user",
+      component: () => import("@/views/User/index.vue"),
+      children: [
+        {
+          path: '/user',
+          component:()=>import('@/views/User/UserInfo/index.vue')
+        },
+        {
+          path: '/user/orderlist',
+          component:()=>import('@/views/User/OrderList/index.vue')
+        }
+      ]
+    }
   ],
 })
 
