@@ -52,8 +52,10 @@ import { message } from 'ant-design-vue';
 import type { UserData, LoginParams, Code } from '@/apis/user/type'
 import router from '@/router';
 import { setToken } from '@/utils/Token'
-import setUserInfo from '@/stores/modules/user'
+import { useUserStore } from '@/stores'
 
+
+const userStore = useUserStore()
 const open = ref<boolean>(false);
 const formData = ref<LoginParams>({
     phone: '',
@@ -106,6 +108,10 @@ const handleClick = async () => {
     if (res) {
         const headers = res.headers
         setToken(headers)
+        console.log(typeof res.data.data.ID);
+        const userId: number = res.data.data.ID;
+        userStore.getUserId(userId)
+        userStore.setUserInfo()
         message.success(res.data.message);
         router.push('/')
     }

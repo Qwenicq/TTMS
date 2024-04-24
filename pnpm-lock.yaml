@@ -23,6 +23,9 @@ dependencies:
   pinia-plugin-persistedstate:
     specifier: ^3.2.1
     version: 3.2.1(pinia@2.1.7)
+  pnpm:
+    specifier: ^9.0.5
+    version: 9.0.5
   sass:
     specifier: ^1.75.0
     version: 1.75.0
@@ -1130,6 +1133,12 @@ packages:
       typescript: 5.4.4
       vue: 3.4.21(typescript@5.4.4)
       vue-demi: 0.14.7(vue@3.4.21)
+    dev: false
+
+  /pnpm@9.0.5:
+    resolution: {integrity: sha512-pyJXXBj9eR+e9x44fG4WzAPJDYWbmwmY0EKMoOMiCCizKpbm3nPOo07bwPUIJHcbGmnH6ja4bao7icfm2aPZEg==}
+    engines: {node: '>=18.12'}
+    hasBin: true
     dev: false
 
   /postcss@8.4.38:

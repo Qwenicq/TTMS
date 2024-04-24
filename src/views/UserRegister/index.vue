@@ -37,8 +37,9 @@ import { message } from 'ant-design-vue';
 import type { RegisterParams, UserData } from '@/apis/user/type'
 import { setToken } from '@/utils/Token'
 import router from '@/router';
+import { useUserStore } from '@/stores';
 
-
+const userStore = useUserStore()
 const formData = ref<RegisterParams>({
     phone: '',
     password: '',
@@ -55,6 +56,9 @@ const handleClcik = () => {
         message.success(res.data.message)
         const { phone, password } = formData.value
         const resL = await userLoginAPI({ phone, password, code: '' })
+        const userId: number = resL.data.data.ID;
+        userStore.getUserId(userId)
+        userStore.setUserInfo()
         const headers = resL.headers
         setToken(headers)
         router.push('/')

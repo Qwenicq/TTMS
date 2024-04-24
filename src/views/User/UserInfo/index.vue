@@ -9,13 +9,13 @@
             </div>
             <div class="formData">
                 <a-form-item label="用户名">
-                    <a-input v-model:value="formState.Name" />
+                    <a-input v-model:value="formState.name" />
                 </a-form-item>
                 <a-form-item label="生 日">
-                    <a-date-picker v-model:value="formState.Birthday" />
+                    <a-date-picker v-model:value="formState.birthday" />
                 </a-form-item>
                 <a-form-item label="兴 趣" name="type">
-                    <a-checkbox-group v-model:value="formState.Interest">
+                    <a-checkbox-group v-model:value="formState.interest">
                         <a-checkbox value="1" name="type">美食</a-checkbox>
                         <a-checkbox value="2" name="type">动漫</a-checkbox>
                         <a-checkbox value="3" name="type">摄影</a-checkbox>
@@ -29,13 +29,13 @@
                     </a-checkbox-group>
                 </a-form-item>
                 <a-form-item label="个性签名">
-                    <a-input v-model:value="formState.signature" />
+                    <a-input v-model:value="formState.sign" />
                 </a-form-item>
                 <a-form-item>
-                <a-button type="primary">确认修该</a-button>
-            </a-form-item>
+                    <a-button type="primary" @click.prevent="onSubmit">确认修改</a-button>
+                </a-form-item>
             </div>
-          
+
         </a-form>
 
     </div>
@@ -43,27 +43,33 @@
 
 <script setup lang="ts">
 import { message } from 'ant-design-vue';
-import { reactive } from 'vue';
-import { Dayjs } from 'dayjs'
+import { ref, reactive } from 'vue';
+import { upDataUserInfo } from '@/apis/user/index'
+import dayjs, { Dayjs } from 'dayjs'
 import type { UnwrapRef } from 'vue';
-import { ref } from 'vue';
+import { useUserStore } from '@/stores';
 
+const userStore = useUserStore()
 const img_change = ref(true)
 const image = ref([])
 const avatarFile = ref<any>(null)
-const avaterURL = ref('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0UcOwPmRlZ19sOdnDwsqOwhvFmcukTorkag&usqp=CAU')
+const avaterURL = ref<string>(userStore.userInfo.ProfilePhoto)
+// let formdata = new FormData()
+// let form = undefined
 
 interface FormState {
-    Name: string;
-    Interest: string[],
-    Birthday: Dayjs | undefined,
-    signature: string
+    name: string;
+    interest: string[],
+    birthday: Dayjs | undefined,
+    sign: string,
+    picture: string
 }
 const formState: UnwrapRef<FormState> = reactive({
-    Name: '',
-    Interest: [],
-    Birthday: undefined,
-    signature: ''
+    name: '',
+    interest: [],
+    birthday: undefined,
+    sign: '',
+    picture: ''
 });
 
 // 传入图片
@@ -86,11 +92,46 @@ const handleChange = (event: any) => {
 const createImage = (e: any) => {
     e.preventDefault()
     const reader = new window.FileReader()
+    // form = e.target.files
+    // Array.from(e.target.files).map(item => {
+    //     console.log(item)
+    //     // @ts-ignore
+    //     formdata.append("file", item)
+    //     console.log(formdata);
+    
+    // })
+ 
     reader.readAsDataURL(avatarFile.value)
     reader.onload = function (e) {
         img_change.value = false
+        // @ts-ignore
         image.value.push(e.target?.result)
+        formState.picture = image.value[0]
     }
+}
+
+// 表单提交
+const onSubmit = async () => {
+    const { birthday, interest, name, sign, picture } = formState
+    console.log(userStore.userId);
+    const userId = userStore.userId.toString()
+    const Birthday = dayjs(birthday).unix()
+    const upLoadData = {
+        num: '1 2 5 3',
+        // @ts-ignore
+        user_id: userId,
+        // name,
+        picture,
+        // interest,
+        sign,
+        birthday: Birthday
+    }
+    console.log(upLoadData);
+
+    const res = await upDataUserInfo(upLoadData)
+    console.log(res);
+
+
 }
 </script>
 
@@ -99,12 +140,14 @@ const createImage = (e: any) => {
     height: 100vh;
     width: 100vw;
     position: relative;
+
     .Form {
         position: absolute;
         top: 10%;
-        left: 10%;      
+        left: 10%;
         width: 600px;
         display: flex;
+
         .avatarChange {
             position: relative;
 
@@ -128,6 +171,7 @@ const createImage = (e: any) => {
                 opacity: 0;
             }
         }
+
         .formData {
             margin-left: 40px;
         }

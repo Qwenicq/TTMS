@@ -22,8 +22,9 @@
             <a-dropdown>
                 <a class="ant-dropdown-link" @click.prevent>
                     <a-avatar size="large">
-                        <template #icon>
-                            <UserOutlined />
+                        <template #icon  >
+                            <UserOutlined  v-if="!token"/>
+                            <img :src="userImg" alt="">
                         </template>
                     </a-avatar>
                     <DownOutlined />
@@ -31,11 +32,11 @@
                 <template #overlay>
                     <a-menu>
                         <a-menu-item v-if="!token">
-                            <a href="/login">登录</a>
+                            <router-link to="/login">登录</router-link>
                         </a-menu-item>
                         <div v-else>
                             <a-menu-item>
-                                <a href="/user">个人中心</a>
+                                <router-link to="/user">个人中心</router-link>
                             </a-menu-item>
                             <a-menu-item>
                                 <a @click="()=>removeToken()">退出登录</a>
@@ -52,20 +53,15 @@
 </template>
 
 <script setup lang="ts">
-import router from '@/router';
 import { getToken ,removeToken} from '@/utils/Token'
-
+import { useUserStore } from '@/stores';
+import { UserOutlined } from '@ant-design/icons-vue';
 
 const token = getToken().token
+const userStore = useUserStore()
+const userImg = userStore.userInfo.ProfilePhoto 
 
 
-const handleUser = () => {
-    if (token) {
-        router.push('/user')
-    } else {
-        router.push('/login')
-    }
-}
 </script>
 
 <style scoped lang="scss">

@@ -16,6 +16,7 @@ enum API {
   USERLOGINBYCODE = "/user/api/loginByCode",
   CHANGEPWD = "/user/api/resetPassword",
   GETUSERINFO = "/user/api/detail",
+  UPDATAUSERINFO='/user/api/profile'
 }
 
 // 用户登录
@@ -44,6 +45,12 @@ export const changePWD = (userData: ChangePWD) => {
 }
 
 // 获取用户信息
-export const getUserInfo = (userid: number) => {
+export const getUserInfo = (userid: number | null) => {
   return request.get<any, userInfo>(API.GETUSERINFO + `?id=${userid}`)
+}
+
+
+// 更新用户信息
+export const upDataUserInfo = (userData) => {
+ return request.post(API.UPDATAUSERINFO, userData) 
 }
