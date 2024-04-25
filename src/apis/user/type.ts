@@ -84,3 +84,14 @@ export interface userInfo {
     total: null
   }
 }
+
+// 用户修改信息
+export interface userUpdataInfo {
+  num: string
+  user_id: string | undefined
+  name: string 
+  picture: File | undefined
+  interest: string[]
+  sign: string
+  birthday: number
+}

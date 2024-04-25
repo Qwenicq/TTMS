@@ -3,7 +3,7 @@
         <a-form :model="formState" class="Form">
             <div class="avatarChange">
                 <!-- -->
-                <img :src="avaterURL" class="img" v-if="img_change">
+                <img :src="avatarURL" class="img" v-if="img_change">
                 <img :src="image[0]" class="img" v-else>
                 <input type="file" @change="handleChange">
             </div>
@@ -53,23 +53,29 @@ const userStore = useUserStore()
 const img_change = ref(true)
 const image = ref([])
 const avatarFile = ref<any>(null)
-const avaterURL = ref<string>(userStore.userInfo.ProfilePhoto)
-// let formdata = new FormData()
-// let form = undefined
+const avatarURL = ref<string>('')
+if (userStore.userInfo.ProfilePhoto !== '') {
+    avatarURL.value = userStore.userInfo.ProfilePhoto
+} else {
+    avatarURL.value = 'https://th.bing.com/th/id/R.8e2c571ff125b3531705198a15d3103c?rik=gzhbzBpXBa%2bxMA&riu=http%3a%2f%2fpluspng.com%2fimg-png%2fuser-png-icon-big-image-png-2240.png&ehk=VeWsrun%2fvDy5QDv2Z6Xm8XnIMXyeaz2fhR3AgxlvxAc%3d&risl=&pid=ImgRaw&r=0'
+}
+
 
 interface FormState {
     name: string;
     interest: string[],
     birthday: Dayjs | undefined,
     sign: string,
-    picture: string
+    picture: File | undefined
 }
+const user_info = userStore.userInfo
+
 const formState: UnwrapRef<FormState> = reactive({
-    name: '',
-    interest: [],
-    birthday: undefined,
-    sign: '',
-    picture: ''
+    name: user_info.Name || '',
+    interest: user_info.Interest || [],
+    birthday: dayjs(user_info.Birthday) || undefined,
+    sign: user_info.Sign || '',
+    picture: undefined
 });
 
 // 传入图片
@@ -78,9 +84,10 @@ const handleChange = (event: any) => {
     console.log(avatarFile.value);
     const supportedType = ['image/png', 'image/jpeg', 'image/jpg']
     const imageSize = avatarFile.value.size
-    console.log(imageSize);
+
     if (imageSize <= 102400) {
         if (avatarFile && supportedType.indexOf(avatarFile.value.type) >= 0) {
+            formState.picture = avatarFile.value
             createImage(event)
         } else {
             message.warning('图片格式只支持：jpg、jpeg和png')
@@ -92,46 +99,32 @@ const handleChange = (event: any) => {
 const createImage = (e: any) => {
     e.preventDefault()
     const reader = new window.FileReader()
-    // form = e.target.files
-    // Array.from(e.target.files).map(item => {
-    //     console.log(item)
-    //     // @ts-ignore
-    //     formdata.append("file", item)
-    //     console.log(formdata);
-    
-    // })
- 
     reader.readAsDataURL(avatarFile.value)
     reader.onload = function (e) {
         img_change.value = false
         // @ts-ignore
         image.value.push(e.target?.result)
-        formState.picture = image.value[0]
+
     }
 }
 
 // 表单提交
 const onSubmit = async () => {
     const { birthday, interest, name, sign, picture } = formState
-    console.log(userStore.userId);
-    const userId = userStore.userId.toString()
+    const userId = userStore.userId?.toString()
     const Birthday = dayjs(birthday).unix()
     const upLoadData = {
         num: '1 2 5 3',
-        // @ts-ignore
         user_id: userId,
-        // name,
+        name,
         picture,
-        // interest,
+        interest,
         sign,
         birthday: Birthday
     }
-    console.log(upLoadData);
-
     const res = await upDataUserInfo(upLoadData)
     console.log(res);
-
-
+    userStore.setUserInfo()
 }
 </script>
 

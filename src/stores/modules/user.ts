@@ -6,26 +6,29 @@ import { getUserInfo } from "@/apis/user/index"
 
 export const useUserStore = defineStore(
   "user",
-  () => {
-    const { token, refresh_token } = getToken() || ""
+ () => {
+    const { token, refresh_token } = getToken() || { token: null, refresh_token: null }
+
     interface userInfoType {
-      ID: number
+      ID: number | null
       CreatedAt: string
       UpdatedAt: string
       DeletedAt: null
-      Wallet: 0
-      Flag: 0
-      Ticket: []
-      Snack: []
-      FavoriteMovie: []
-      FavoriteSnack: []
+      Wallet: number
+      Flag: number
+      Ticket: any[]
+      Snack: any[]
+      FavoriteMovie: any[]
+      FavoriteSnack: any[]
       Name: string
       ProfilePhoto: string
       Birthday: string
       Interest: string[]
       Sign: string
     }
-    const userInfo = <any | userInfoType>ref({
+
+    // Define userInfo as userInfoType and use type assertion
+    const userInfo = ref <userInfoType>({
       ID: null,
       CreatedAt: '',
       UpdatedAt: '',
@@ -42,19 +45,31 @@ export const useUserStore = defineStore(
       Interest:[],
       Sign: ''
     })
-    const userId = ref<number>(-1)
     
-    // 获取用户id
-    const getUserId = (id: number) => {
-      userId.value = id
-      console.log(userId.value)
+    const userId = ref<number | null>(null) 
+
+    const fetchUserInfo = async (id: number) => {
+      try {
+        console.log(id);
+        
+        const res = await getUserInfo(id)
+        console.log(res);
+        userInfo.value = res.data.data
+        console.log(userInfo.value);
+        
+      } catch (error) {
+        console.error("Failed to fetch user info:", error)
+      }
     }
 
-    // 获取用户信息
-    const setUserInfo = async () => {
-      const res = await getUserInfo(userId.value)
-      userInfo.value = res.data.data
-      console.log(userInfo.value)
+    const getUserId = (id: number) => {
+      userId.value = id
+    }
+
+    const setUserInfo = () => {
+      if (userId.value !== null) {
+        fetchUserInfo(userId.value)
+      }
     }
 
     return {
