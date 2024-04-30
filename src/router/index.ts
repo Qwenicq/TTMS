@@ -1,7 +1,7 @@
-import { createRouter, createWebHistory } from "vue-router"
+import { createRouter, createWebHistory  } from "vue-router"
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory (import.meta.env.BASE_URL),
   routes: [
     {
       path: "/",
@@ -20,6 +20,10 @@ const router = createRouter({
       component: () => import("@/views/SnackManger/index.vue"),
     },
     {
+      path: "/filmdetail",
+      component: () => import("@/views/Film/index.vue"),
+    },
+    {
       path: "/user",
       component: () => import("@/views/User/index.vue"),
       children: [
@@ -30,6 +34,24 @@ const router = createRouter({
         {
           path: "/user/orderlist",
           component: () => import("@/views/User/OrderList/index.vue"),
+        },
+      ],
+    },
+    {
+      path: "/admin",
+      component: () => import("@/views/Admin/index.vue"),
+      children: [
+        {
+          path: "/admin",
+          component: () => import("@/views/AdminLayout/index.vue"),
+        },
+        {
+          path: "/admin/film",
+          component: () => import("@/views/FilmAdmin/index.vue"),
+        },
+        {
+          path: "/admin/snack",
+          component: () => import("@/views/SnackManger/index.vue"),
         },
       ],
     },

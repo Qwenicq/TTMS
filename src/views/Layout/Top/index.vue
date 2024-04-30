@@ -39,7 +39,7 @@
                                 <router-link to="/user">个人中心</router-link>
                             </a-menu-item>
                             <a-menu-item>
-                                <a @click="()=>removeToken()">退出登录</a>
+                                <a @click="handleRemove">退出登录</a>
                             </a-menu-item>
                         </div>
                     </a-menu>
@@ -57,10 +57,19 @@ import { getToken ,removeToken} from '@/utils/Token'
 import { useUserStore } from '@/stores';
 import { UserOutlined } from '@ant-design/icons-vue';
 
-const token = getToken().token
+const token:string | null = getToken().token
 const userStore = useUserStore()
-const userImg = userStore.userInfo.ProfilePhoto 
-
+let userImg:string = ''
+if (userStore.userInfo.ProfilePhoto !== '') {
+    userImg = userStore.userInfo.ProfilePhoto 
+} else {
+    userImg = 'https://th.bing.com/th/id/R.8e2c571ff125b3531705198a15d3103c?rik=gzhbzBpXBa%2bxMA&riu=http%3a%2f%2fpluspng.com%2fimg-png%2fuser-png-icon-big-image-png-2240.png&ehk=VeWsrun%2fvDy5QDv2Z6Xm8XnIMXyeaz2fhR3AgxlvxAc%3d&risl=&pid=ImgRaw&r=0'
+}
+ 
+const handleRemove = async() => {
+    await removeToken()
+    await userStore.removeUser()
+}
 
 </script>
 

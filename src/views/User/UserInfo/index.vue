@@ -113,18 +113,34 @@ const onSubmit = async () => {
     const { birthday, interest, name, sign, picture } = formState
     const userId = userStore.userId?.toString()
     const Birthday = dayjs(birthday).unix()
+    const Interest = interest.map(item => item)
+    const formData = new FormData()
     const upLoadData = {
-        num: '1 2 5 3',
+        num: '1 3 4 5',
         user_id: userId,
         name,
         picture,
-        interest,
+        interest: Interest,
         sign,
         birthday: Birthday
     }
-    const res = await upDataUserInfo(upLoadData)
+    if (picture) {
+        upLoadData.num = '1 2 3 4 5'
+    }
+    for (var key in upLoadData) {
+        if (upLoadData.hasOwnProperty(key)) {
+            // @ts-ignore
+            formData.append(key, upLoadData[key])
+        }
+    }
+    console.log(formData);
+    // @ts-ignore
+    const res = await upDataUserInfo(formData)
     console.log(res);
-    userStore.setUserInfo()
+    setTimeout(async () => {
+        await userStore.setUserInfo()
+    }, 1000)
+
 }
 </script>
 
