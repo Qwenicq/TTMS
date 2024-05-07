@@ -48,6 +48,21 @@ const router = createRouter({
         {
           path: "/admin/film",
           component: () => import("@/views/FilmAdmin/index.vue"),
+          redirect:'/film/uploadfilm',
+          children: [
+            {
+              path: '/film/uploadfilm',
+              component: ()=>import('@/views/UploadFilm/index.vue')
+            },
+            {
+              path: '/film/editfilm',
+              component:()=>import('@/views/EditPage/index.vue')
+            },
+            {
+              path: '/film/addtheatre',
+              component:()=>import('@/views/AddTheatre/index.vue')
+            }
+          ]
         },
         {
           path: "/admin/snack",

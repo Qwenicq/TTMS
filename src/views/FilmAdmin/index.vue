@@ -3,20 +3,21 @@
         <div class="nav">
             <ul>
                 <li :class="[flag === '1' && 'active', 'item']" @click="handleCilk('1')">
-                    <RouterLink to="" class='link'>上架电影</RouterLink>
+                    <RouterLink to="/film/uploadfilm" class='link'>上架电影</RouterLink>
                 </li>
                 <li :class="[flag === '2' && 'active', 'item']" @click="handleCilk('2')">
-                    <RouterLink to="" class='link'>下架电影</RouterLink>
+                    <RouterLink to="/film/addtheatre" class='link'>添加放映厅</RouterLink>
                 </li>
             </ul>
         </div>
+        <RouterView class="router"></RouterView>
     </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
 
-const flag = ref('')
+const flag = ref('1')
 
 const handleCilk = (id: string) => {
     flag.value = id
@@ -30,9 +31,11 @@ const handleCilk = (id: string) => {
     position: relative;
     left: 50%;
     transform: translateX(-50%);
+    display: flex;
 
     .nav {
         .item {
+            margin-top: 10px;
             width: 100px;
             height: 50px;
             margin-bottom: 15px;
@@ -41,7 +44,10 @@ const handleCilk = (id: string) => {
             list-style: none;
 
             .link {
+                display: block;
                 text-decoration: none;
+                width: 100px;
+                height: 50px;
                 font-size: 18px;
                 font-weight: 800;
                 color: black;
@@ -50,15 +56,23 @@ const handleCilk = (id: string) => {
         }
 
         .active {
+            width: 100px;
+            height: 50px;
             background: skyblue;
         }
 
         .item:hover {
-            border: 1px solid transparent;
-            border-radius: 5%;
+            width: 100px;
+            height: 50px;
+            // border: 1px solid transparent;
+            // border-radius: 10%;
             background: skyblue;
         }
 
+    }
+
+    .router {
+        margin-left: 20px;
     }
 }
 </style>
