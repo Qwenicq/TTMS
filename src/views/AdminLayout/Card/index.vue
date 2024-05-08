@@ -6,24 +6,45 @@
         </div>
         <div class="option">
             <a-button type="primary" @click=handleEdit ><EditOutlined /> </a-button>
-            <a-button type="primary" danger ><DeleteOutlined /></a-button>
+            <a-button type="primary" danger @click="handleDel" v-if="infomation.Online"><DeleteOutlined /></a-button>
+            <a-button type="primary"  @click="handleUp" v-else><UploadOutlined /></a-button>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
 import router from '@/router';
+import { useFilmStore } from '@/stores';
+import {delFilm,upFilm } from '@/apis/film/index'
 
 const props = defineProps(['info'])
 const infomation = props.info
+const filmStore = useFilmStore()
+
 
 import {
     DeleteOutlined,
-    EditOutlined
+    EditOutlined,
+    UploadOutlined
 } from '@ant-design/icons-vue'
 
 const handleEdit = () => {
     router.push(`/film/editfilm/${infomation.ID}`)
+}
+
+const id = infomation.ID.toString()
+
+const handleDel = async () => {
+    
+    const res = await delFilm(id)
+    console.log(1);
+    filmStore.getFilmData()
+}
+
+const handleUp =async () => {
+    const res = await upFilm(id)
+    console.log(2);
+    filmStore.getFilmData()
 }
 </script>
 
