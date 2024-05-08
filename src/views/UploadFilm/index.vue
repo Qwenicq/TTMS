@@ -1,53 +1,78 @@
 <template>
     <div>
-      
-        <form class="form" >
+        <div class="form">
             <span class="item">
                 <label for="name">电影名称：</label>
-                <input type="text" id="name" />
+                <input type="text" id="name" v-model="filmInfo.name" />
             </span>
             <span class="item">
                 <label for="director">导演：</label>
-                <input type="text" id="director" />
+                <input type="text" id="director" v-model="filmInfo.director" />
             </span>
             <span class="item">
                 <label for="money">票价：</label>
-                <input type="text" id="money" />
+                <input type="text" id="money" v-model="filmInfo.money" />
             </span>
             <span class="item">
                 <label for="duration">电影时长：</label>
-                <input type="text" id="duration" />
+                <input type="text" id="duration" v-model="filmInfo.duration" />
             </span>
             <span class="item">
                 <label for="releaseTime">上映时间：</label>
-                <input type="text" id="releaseTime" />
+                <input type="text" id="releaseTime" placeholder="例:2024-1-21" v-model="filmInfo.releaseTime" />
             </span>
             <span class="item">
                 电影照片：
                 <div class="avatarChange">
-                    <img :src="image[0]" class="img" >
+                    <img src="https://img1.baidu.com/it/u=329429787,4292897941&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500" class="img" v-if="filmInfo.picture === undefined">
+                    <img :src="image[0]" class="img" v-else>
                     <input type="file" @change="handleChange">
                 </div>
             </span>
 
             <span class="item">
                 <label for="actor">演员：</label>
-                <input type="text" id="actor" />
+                <input type="text" id="actor" v-model="filmInfo.actor" />
             </span>
             <span class="item">
                 <label for="info">简介：</label>
-                <input type="text" id="info" />
+                <input type="text" id="info" v-model="filmInfo.info" />
             </span>
-            <button class="btn">确认上架</button>
-        </form>
+            <button class="btn" @click="handleSubmit">确认上架</button>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
 import { message } from 'ant-design-vue';
+import dayjs from 'dayjs';
+import { addFilm } from '@/apis/film/index'
+
 const avatarFile = ref<any>(null)
 const image = ref([])
+
+interface FilmInfo {
+    name: string
+    director: string
+    money: string
+    duration: string
+    releaseTime: string
+    picture: File | undefined,
+    actor: string,
+    info: string
+}
+
+const filmInfo = ref<FilmInfo>({
+    name: '',
+    director: '',
+    money: '',
+    duration: '',
+    releaseTime: '',
+    picture: undefined,
+    actor: '',
+    info: ''
+})
 
 // 传入图片
 const handleChange = (event: any) => {
@@ -58,6 +83,7 @@ const handleChange = (event: any) => {
 
     if (imageSize <= 102400) {
         if (avatarFile && supportedType.indexOf(avatarFile.value.type) >= 0) {
+            filmInfo.value.picture = avatarFile.value
             createImage(event)
         } else {
             message.warning('图片格式只支持：jpg、jpeg和png')
@@ -76,11 +102,33 @@ const createImage = (e: any) => {
 
     }
 }
+
+
+const handleSubmit = async () => {
+    const { releaseTime } = filmInfo.value
+    const ReleaseTime = dayjs(releaseTime).unix().toString()
+    filmInfo.value.releaseTime = ReleaseTime
+    const formData = new FormData()
+    Object.keys(filmInfo.value).forEach(key => {
+        formData.append(key, filmInfo.value[key]);
+    });
+    console.log(formData);
+    const res = await addFilm(formData)
+    message.success(res.data.message)
+    filmInfo.value = {
+        name: '',
+        director: '',
+        money: '',
+        duration: '',
+        releaseTime: '',
+        picture: undefined,
+        actor: '',
+        info: ''
+    }
+}
 </script>
 
 <style scoped lang="scss">
-
-
 .form {
     display: flex;
     flex-direction: column;
@@ -92,10 +140,12 @@ const createImage = (e: any) => {
         display: flex;
         width: 280px;
         justify-content: space-between;
+
         input {
             padding-left: 5px;
         }
-        input:focus{
+
+        input:focus {
             outline: none;
         }
     }
