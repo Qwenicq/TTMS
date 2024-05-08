@@ -4,42 +4,43 @@
             <h1>修改电影信息</h1>
         </div>
 
-        <form class="form">
+        <form class="form" @submit.prevent="handleSubmit">
             <span class="item">
                 <label for="name">电影名称：</label>
-                <input type="text" id="name" />
+                <input type="text" id="name" v-model="editInfo.name" />
             </span>
             <span class="item">
                 <label for="director">导演：</label>
-                <input type="text" id="director" />
+                <input type="text" id="director" v-model="editInfo.director" />
             </span>
             <span class="item">
                 <label for="money">票价：</label>
-                <input type="text" id="money" />
+                <input type="text" id="money" v-model="editInfo.money" />
             </span>
             <span class="item">
                 <label for="duration">电影时长：</label>
-                <input type="text" id="duration" />
+                <input type="text" id="duration" v-model="editInfo.duration" />
             </span>
             <span class="item">
                 <label for="releaseTime">上映时间：</label>
-                <input type="text" id="releaseTime" />
+                <input type="text" id="releaseTime" v-model="editInfo.release_time" />
             </span>
             <span class="item">
                 电影照片：
                 <div class="avatarChange">
-                    <img :src="image[0]" class="img">
-                    <input type="file" @change="handleChange">
+                    <img :src="info.Picture" class="img" v-if="editInfo.picture === undefined">
+                    <img :src="image[0]" class="img" v-else>
+                    <input type="file" @change="handleChange" disabled>
                 </div>
             </span>
 
             <span class="item">
                 <label for="actor">演员：</label>
-                <input type="text" id="actor" />
+                <input type="text" id="actor" v-model="editInfo.actor" disabled />
             </span>
             <span class="item">
                 <label for="info">简介：</label>
-                <input type="text" id="info" />
+                <input type="text" id="info" v-model="editInfo.info" />
             </span>
             <button class="btn">确认上架</button>
         </form>
@@ -50,6 +51,32 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { message } from 'ant-design-vue';
+import { useFilmStore } from '@/stores';
+import { useRoute } from 'vue-router';
+import dayjs from 'dayjs';
+import { editFilm } from '@/apis/film/index'
+
+const route = useRoute()
+const id = <string>route.params.id
+const idNum = parseInt(id)
+const filmStore = useFilmStore()
+
+const [info] = filmStore.filmList.filter(item => item.ID === idNum)
+
+
+const editInfo = ref({
+    num: '1 2 3 4 5 6',
+    name: info.Name,
+    director: info.Director,
+    info: info.Info,
+    movie_id: id,
+    money: info.Money,
+    release_time: dayjs(info.release_time).format('YYYY-MM-DD'),
+    duration: info.Duration,
+    picture: undefined,
+    actor: info.Actor
+})
+
 const avatarFile = ref<any>(null)
 const image = ref([])
 
@@ -77,9 +104,41 @@ const createImage = (e: any) => {
     reader.onload = function (e) {
         // @ts-ignore
         image.value.push(e.target?.result)
-
     }
 }
+
+const handleSubmit = async () => {
+    const { release_time } = editInfo.value
+    const ReleaseTime = dayjs(release_time).unix().toString()
+    editInfo.value.release_time = ReleaseTime
+    console.log(editInfo.value.release_time);
+
+    const formData = new FormData()
+    Object.keys(editInfo.value).forEach(key => {
+        formData.append(key, editInfo.value[key])
+    })
+    const res = await editFilm(formData)
+    console.log(res);
+    message.success(res.data.message)
+    filmStore.getFilmData()
+    setTimeout(() => {
+        const [info] = filmStore.filmList.filter(item => item.ID === idNum)
+
+        editInfo.value = {
+            num: '1 2 3 4 5 6',
+            name: info.Name,
+            director: info.Director,
+            info: info.Info,
+            movie_id: id,
+            money: info.Money,
+            release_time: dayjs(info.release_time).format('YYYY-MM-DD'),
+            duration: info.Duration,
+            picture: undefined,
+            actor: info.Actor
+        }
+    }, 200)
+}
+
 </script>
 
 <style scoped lang="scss">

@@ -19,7 +19,7 @@
             </span>
             <span class="item">
                 <label for="releaseTime">上映时间：</label>
-                <input type="text" id="releaseTime" placeholder="例:2024-1-21" v-model="filmInfo.releaseTime" />
+                <input type="text" id="releaseTime" placeholder="例:2024-1-21" v-model="filmInfo.release_time" />
             </span>
             <span class="item">
                 电影照片：
@@ -48,16 +48,19 @@ import { ref } from 'vue';
 import { message } from 'ant-design-vue';
 import dayjs from 'dayjs';
 import { addFilm } from '@/apis/film/index'
+import  customParseFormat  from'dayjs/plugin/customParseFormat'
+import { useFilmStore } from '@/stores';
 
 const avatarFile = ref<any>(null)
 const image = ref([])
+const filmStore = useFilmStore()
 
 interface FilmInfo {
     name: string
     director: string
     money: string
     duration: string
-    releaseTime: string
+    release_time: string
     picture: File | undefined,
     actor: string,
     info: string
@@ -68,7 +71,7 @@ const filmInfo = ref<FilmInfo>({
     director: '',
     money: '',
     duration: '',
-    releaseTime: '',
+    release_time: '',
     picture: undefined,
     actor: '',
     info: ''
@@ -105,22 +108,23 @@ const createImage = (e: any) => {
 
 
 const handleSubmit = async () => {
-    const { releaseTime } = filmInfo.value
-    const ReleaseTime = dayjs(releaseTime).unix().toString()
-    filmInfo.value.releaseTime = ReleaseTime
+    const { release_time } = filmInfo.value
+    dayjs.extend(customParseFormat)
+    const ReleaseTime = dayjs(release_time).unix().toString()
+    filmInfo.value.release_time = ReleaseTime
     const formData = new FormData()
     Object.keys(filmInfo.value).forEach(key => {
         formData.append(key, filmInfo.value[key]);
     });
-    console.log(formData);
     const res = await addFilm(formData)
     message.success(res.data.message)
+    filmStore.getFilmData()
     filmInfo.value = {
         name: '',
         director: '',
         money: '',
         duration: '',
-        releaseTime: '',
+        release_time: '',
         picture: undefined,
         actor: '',
         info: ''

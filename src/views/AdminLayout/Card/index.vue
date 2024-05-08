@@ -1,8 +1,8 @@
 <template>
     <div class="card">
         <div class="content"> 
-                <img src="https://0img.mgtv.com/oldpic/preview/star_images/2015/xiyangyang/xiyangyang20151021171455974.png" class="img">
-                <span class="name">电影:喜羊羊</span>
+                <img :src="infomation.Picture" class="img">
+                <span class="name">电影:{{infomation.Name}}</span>
         </div>
         <div class="option">
             <a-button type="primary" @click=handleEdit ><EditOutlined /> </a-button>
@@ -13,13 +13,17 @@
 
 <script setup lang="ts">
 import router from '@/router';
+
+const props = defineProps(['info'])
+const infomation = props.info
+
 import {
     DeleteOutlined,
     EditOutlined
 } from '@ant-design/icons-vue'
 
 const handleEdit = () => {
-    router.push('/film/editfilm')
+    router.push(`/film/editfilm/${infomation.ID}`)
 }
 </script>
 

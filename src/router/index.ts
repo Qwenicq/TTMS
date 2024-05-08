@@ -55,8 +55,9 @@ const router = createRouter({
               component: ()=>import('@/views/UploadFilm/index.vue')
             },
             {
-              path: '/film/editfilm',
-              component:()=>import('@/views/EditPage/index.vue')
+              path: '/film/editfilm/:id',
+              component: () => import('@/views/EditPage/index.vue'),
+              props: true
             },
             {
               path: '/film/addtheatre',

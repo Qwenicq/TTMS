@@ -6,3 +6,4 @@ pinia.use(piniaPluginPersistedstate) // 使用正确的插件创建函数
 
 export default pinia
 export * from "./modules/user"
+export * from './modules/film'
