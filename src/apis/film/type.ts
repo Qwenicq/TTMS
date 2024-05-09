@@ -18,3 +18,18 @@ export interface filmData {
     "average": number
 }
 
+export interface theatreInfo {
+    "ID": number,
+    "CreatedAt": string,
+    "UpdatedAt": string,
+    "DeletedAt": null,
+    "Name": string,
+    "Seat": string,
+    "N": number,
+    "M": number,
+    "Info":string,
+    "Inuse": number,
+    "Num": number,
+    "Plays": string
+}
+

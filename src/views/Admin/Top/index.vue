@@ -60,7 +60,7 @@ const handleRemove = async () => {
 .container {
     position: relative;
     background-color: rgb(83, 79, 79);
-    width: 100vw;
+    width: 100%;
     height: 100px;
     color: white;
 

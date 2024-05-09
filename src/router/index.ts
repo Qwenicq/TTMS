@@ -44,6 +44,17 @@ const router = createRouter({
         {
           path: "/admin",
           component: () => import("@/views/AdminLayout/index.vue"),
+          redirect: '/admin/filmshow',
+          children: [
+            {
+              path: '/admin/filmshow',
+              component:()=>import('@/views/FilmShow/index.vue')
+            },
+            {
+              path: '/admin/theatreshow',
+              component:()=>import('@/views/TheatreShow/index.vue')
+            }
+          ]
         },
         {
           path: "/admin/film",

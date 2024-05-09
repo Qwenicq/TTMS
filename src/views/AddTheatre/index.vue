@@ -1,9 +1,9 @@
 <template>
-    <div>
-        <a-form :model="formState" name="basic" :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }" autocomplete="off"
+    <div class="container">
+        <a-form class="form" :model="formState" name="basic" :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }" autocomplete="off"
             @finish="onFinish" @finishFailed="onFinishFailed">
-            <a-form-item label="放映厅名字" name="theatreName">
-                <a-input v-model:value="formState.theatreName" />
+            <a-form-item label="放映厅名字" name="name">
+                <a-input v-model:value="formState.name" />
             </a-form-item>
 
             <a-form-item label="简介" name="info">
@@ -27,22 +27,34 @@
 
 <script setup lang="ts">
 import { reactive } from 'vue';
+import { addTheatre} from '@/apis/film/index'
+import { message } from 'ant-design-vue';
 
 interface FormState {
-    theatreName: string;
+    name: string;
     info: string;
     rows: number | null;
     columns: number | null;
 }
 
 const formState = reactive<FormState>({
-    theatreName: '',
+    name: '',
     info: '',
     rows: null,
     columns: null
 });
-const onFinish = (values: any) => {
-  console.log('Success:', values);
+const onFinish =async (values: FormState) => {
+    const formData = new FormData()
+    Object.keys(values).forEach(key => {
+        // @ts-ignore
+        formData.append(key, values[key])
+    })
+    const res = await addTheatre(formData)
+    message.success(res.data.message)
+    formState.name = ''
+    formState.info = ''
+    formState.columns = null
+    formState.rows = null
 };
 
 const onFinishFailed = (errorInfo: any) => {
@@ -50,4 +62,11 @@ const onFinishFailed = (errorInfo: any) => {
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+.container {
+    .form {
+        margin-top: 30px;
+        margin-left: 300px;
+    }
+}
+</style>
