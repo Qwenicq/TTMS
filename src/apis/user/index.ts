@@ -18,6 +18,8 @@ enum API {
   CHANGEPWD = "/user/api/resetPassword",
   GETUSERINFO = "/user/api/detail",
   UPDATAUSERINFO = "/user/api/profile",
+  MONEY = '/others/api/recharge',
+  UPDATE = '/user/api/admin'
 }
 
 // 用户登录
@@ -53,4 +55,14 @@ export const getUserInfo = (user_id: number | null) => {
 // 更新用户信息
 export const upDataUserInfo = (userData:userUpdataInfo) => {
   return request.post(API.UPDATAUSERINFO, userData)
+}
+
+// 充值
+export const rechargeAPI = (data: FormData) => {
+  return request.put(API.MONEY ,data)
+}
+
+// 升级成管理员
+export const updateAdmin = (data: FormData) => {
+  return request.put(API.UPDATE,data)
 }

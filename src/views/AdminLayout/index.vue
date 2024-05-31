@@ -32,6 +32,9 @@ const routerChange = (path: string, id: string) => {
         list-style: none;
         width: 300px;
         justify-content: space-between;
+        li{
+            cursor: pointer;
+        }
         .item{
             font-size: 20px;
             font-weight: 700;

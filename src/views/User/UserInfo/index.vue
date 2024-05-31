@@ -85,7 +85,7 @@ const handleChange = (event: any) => {
     const supportedType = ['image/png', 'image/jpeg', 'image/jpg']
     const imageSize = avatarFile.value.size
 
-    if (imageSize <= 102400) {
+    if (imageSize <= 1024000) {
         if (avatarFile && supportedType.indexOf(avatarFile.value.type) >= 0) {
             formState.picture = avatarFile.value
             createImage(event)

@@ -36,7 +36,7 @@ const handleDel = async () => {
 .card {
     margin-top: 30px;
     width: 280px;
-    height: 170px;
+    height: 200px;
     border: 1px solid skyblue;
     border-radius: 20%;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;

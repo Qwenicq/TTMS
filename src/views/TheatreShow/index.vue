@@ -33,6 +33,7 @@ const flag = async(payload: boolean) => {
     left: 50%;
     transform: translateX(-50%);
     width: 1400px;
+    min-height: 90vh;
     display: flex;
     flex-wrap: wrap;
     gap: 5%;

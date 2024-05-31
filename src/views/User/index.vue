@@ -2,7 +2,7 @@
     <div class="contanier">
         <Top />
         <div class="content">
-            <a-menu v-model:openKeys="openKeys" v-model:selectedKeys="selectedKeys" style="width: 130px" mode="vertical"
+            <a-menu v-model:openKeys="openKeys" v-model:selectedKeys="selectedKeys" style="width: 130px;height: 500px;" mode="vertical"
                 :items="items" @click="handleClick" />
             <RouterView></RouterView>
         </div>
@@ -35,11 +35,17 @@ const items = ref([
     {
         key: '2',
         icon: () => h(ShopOutlined),
-        label: '订单信息',
+        label: '收藏',
         title: 'orderInfo',
         route: '/user/orderlist'
     },
-
+    {
+        key: '3',
+        icon: () => h(UserOutlined),
+        label: '修改信息',
+        title: 'userInfo',
+        route: '/user/editinfo'
+    },
 ]);
 onMounted(async () => {
     const route = useRoute()

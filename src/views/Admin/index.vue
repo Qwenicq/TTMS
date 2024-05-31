@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="containerBox">
         <Top />
         <RouterView></RouterView>
     </div>
@@ -14,5 +14,7 @@ filmStore.getFilmData()
 </script>
 
 <style scoped>
-
+.containerBox {
+    min-height: 100vh;
+}
 </style>

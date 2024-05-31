@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory  } from "vue-router"
 
 const router = createRouter({
-  history: createWebHistory (import.meta.env.BASE_URL),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: "/",
@@ -16,25 +16,33 @@ const router = createRouter({
       component: () => import("@/views/UserRegister/index.vue"),
     },
     {
-      path: "/manger",
-      component: () => import("@/views/SnackManger/index.vue"),
-    },
-    {
       path: "/filmdetail",
       component: () => import("@/views/Film/index.vue"),
     },
+    {
+      path: "/ticket",
+      component: () => import("@/views/BuyTicket/index.vue"),
+    },
+    {
+      path: '/snack',
+      component:()=>import("@/views/BuySnack/index.vue")
+  },
     {
       path: "/user",
       component: () => import("@/views/User/index.vue"),
       children: [
         {
           path: "/user",
-          component: () => import("@/views/User/UserInfo/index.vue"),
+          component: () => import("@/views/User/User/index.vue"),
         },
         {
           path: "/user/orderlist",
           component: () => import("@/views/User/OrderList/index.vue"),
         },
+        {
+          path: "/user/editinfo",
+          component: () => import("@/views/User/UserInfo/index.vue"),
+        }
       ],
     },
     {
@@ -79,6 +87,17 @@ const router = createRouter({
         {
           path: "/admin/snack",
           component: () => import("@/views/SnackManger/index.vue"),
+          redirect:'/snack/list',
+          children: [
+            {
+              path: '/snack/list',
+              component:()=>import('@/views/SnackList/index.vue')
+          },
+            {
+              path: '/snack/upload',
+              component: () => import('@/views/SnackUpload/index.vue')
+            }
+          ]
         },
       ],
     },

@@ -6,18 +6,19 @@
                 <a-col :span="16">
                     <div class="HotShow">
                         <div class="top">
-                            <span>正在热映(8部)</span>
+                            <span>正在热映({{ filmList.length }}部)</span>
                         </div>
                         <div class="bottom">
-                            <Card v-for="item in 8" :key="item" />
+                            <Card v-for="item in filmList" :key="item.ID" :info="item" v-if="filmList.length > 0" />
                         </div>
                     </div>
                     <div class="ComingShow">
                         <div class="top">
-                            <span>即将上映(8部)</span>
+                            <span>即将上映({{ upcomingList.length }}部)</span>
                         </div>
                         <div class="bottom">
-                            <Card v-for="item in 8" :key="item" />
+                            <Card v-for="item in upcomingList" :key="item.ID" :info="item"
+                                v-if="upcomingList.length > 0" />
                         </div>
                     </div>
                 </a-col>
@@ -32,12 +33,10 @@
                                     <a href="">
                                         <div class="left">
                                             <i class="rank_top_icon"></i>
-                                            <img src="https://gw.alicdn.com/imgextra/i4/2213824393255/O1CN01VtpAoh1Zuq8SHLwDi_!!2213824393255.jpg_300x300Q75.jpg_.webp"
-                                                alt="">
-                                            <span>嘟嘟嘟1111111111111111111111111111111111111</span>
+                                            <img :src="collect[0]?.M.Picture" alt="">
+                                            <span>{{ collect[0]?.M.Name }}</span>
                                         </div>
                                         <div class="right">
-
                                         </div>
                                     </a>
                                 </li>
@@ -45,7 +44,7 @@
                                     <a href="">
                                         <span class="normal_link">
                                             <i class="rank_index">2</i>
-                                            <span class="rank_movie_name">哥斯拉大战金刚2：帝国崛起</span>
+                                            <span class="rank_movie_name">{{ collect[1]?.M.Name }}</span>
                                         </span>
                                     </a>
                                 </li>
@@ -53,23 +52,7 @@
                                     <a href="">
                                         <span class="normal_link">
                                             <i class="rank_index">3</i>
-                                            <span class="rank_movie_name">哥斯拉大战金刚2：帝国崛起</span>
-                                        </span>
-                                    </a>
-                                </li>
-                                <li class="rank_item ">
-                                    <a href="">
-                                        <span class="normal_link">
-                                            <i class="rank_index rank_index_4">4</i>
-                                            <span class="rank_movie_name">哥斯拉大战金刚2：帝国崛起</span>
-                                        </span>
-                                    </a>
-                                </li>
-                                <li class="rank_item ">
-                                    <a href="">
-                                        <span class="normal_link">
-                                            <i class="rank_index rank_index_4">5</i>
-                                            <span class="rank_movie_name">哥斯拉大战金刚2：帝国崛起</span>
+                                            <span class="rank_movie_name">{{ collect[2]?.M.Name }}</span>
                                         </span>
                                     </a>
                                 </li>
@@ -87,9 +70,9 @@
                                     <a href="">
                                         <div class="left">
                                             <i class="rank_top_icon"></i>
-                                            <img src="https://gw.alicdn.com/imgextra/i4/2213824393255/O1CN01VtpAoh1Zuq8SHLwDi_!!2213824393255.jpg_300x300Q75.jpg_.webp"
+                                            <img :src="average[0]?.M.Picture"
                                                 alt="">
-                                            <span>嘟嘟嘟1111111111111111111111111111111111111</span>
+                                            <span>{{average[0]?.M.Name}}</span>
                                         </div>
                                         <div class="right">
 
@@ -100,7 +83,7 @@
                                     <a href="">
                                         <span class="normal_link">
                                             <i class="rank_index">2</i>
-                                            <span class="rank_movie_name">哥斯拉大战金刚2：帝国崛起</span>
+                                            <span class="rank_movie_name">{{average[1]?.M.Name}}</span>
                                         </span>
                                     </a>
                                 </li>
@@ -108,26 +91,11 @@
                                     <a href="">
                                         <span class="normal_link">
                                             <i class="rank_index">3</i>
-                                            <span class="rank_movie_name">哥斯拉大战金刚2：帝国崛起</span>
+                                            <span class="rank_movie_name">{{average[2]?.M.Name}}</span>
                                         </span>
                                     </a>
                                 </li>
-                                <li class="rank_item ">
-                                    <a href="">
-                                        <span class="normal_link">
-                                            <i class="rank_index rank_index_4">4</i>
-                                            <span class="rank_movie_name">哥斯拉大战金刚2：帝国崛起</span>
-                                        </span>
-                                    </a>
-                                </li>
-                                <li class="rank_item ">
-                                    <a href="">
-                                        <span class="normal_link">
-                                            <i class="rank_index rank_index_4">5</i>
-                                            <span class="rank_movie_name">哥斯拉大战金刚2：帝国崛起</span>
-                                        </span>
-                                    </a>
-                                </li>
+                                
                             </ul>
                         </div>
                     </div>
@@ -141,6 +109,27 @@
 <script setup lang="ts">
 import Top from './Top/index.vue'
 import Card from './Card/index.vue'
+import { onBeforeMount, ref } from 'vue';
+import type { filmData } from '@/apis/film/type'
+import { useFilmStore } from '@/stores';
+import { hotFilm, upcomingFIlm, collectRank, talkRank } from '@/apis/film';
+
+onBeforeMount(async () => {
+    const hotFilms = await hotFilm()
+    filmList.value = hotFilms.data.data
+    const commingFilm = await upcomingFIlm()
+    upcomingList.value = commingFilm.data.data
+    const rank1 = await collectRank()
+    collect.value = rank1.data.data
+    const rank2 = await talkRank()
+    average.value = rank2.data.data
+})
+
+const filmStore = useFilmStore()
+const filmList = ref<filmData[]>([])
+const upcomingList = ref<filmData[]>([])
+const collect = ref([])
+const average = ref([])
 </script>
 
 <style scoped lang="scss">
@@ -282,8 +271,10 @@ import Card from './Card/index.vue'
                 }
             }
         }
+
         .Rate_ranking {
             margin-top: 70px;
+
             .top {
                 span {
                     font-size: 28px;

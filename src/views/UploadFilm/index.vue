@@ -114,6 +114,7 @@ const handleSubmit = async () => {
     filmInfo.value.release_time = ReleaseTime
     const formData = new FormData()
     Object.keys(filmInfo.value).forEach(key => {
+        //@ts-ignore
         formData.append(key, filmInfo.value[key]);
     });
     const res = await addFilm(formData)

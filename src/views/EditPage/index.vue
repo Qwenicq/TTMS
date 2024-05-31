@@ -115,6 +115,7 @@ const handleSubmit = async () => {
 
     const formData = new FormData()
     Object.keys(editInfo.value).forEach(key => {
+           //@ts-ignore
         formData.append(key, editInfo.value[key])
     })
     const res = await editFilm(formData)
